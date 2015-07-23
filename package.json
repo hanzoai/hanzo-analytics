@@ -1,0 +1,39 @@
+{
+  "name": "espy",
+  "version": "1.0.0",
+  "description": "Crowdstart Platform's Tracking/Analytics",
+  "main": "index.js",
+    "devDependencies": {
+    "bebop": "^1.3.6",
+    "cake": "^0.1.1",
+    "chai": "^3.1.0",
+    "coffee-script": "^1.9.3",
+    "connect": "^3.4.0",
+    "executive": "^0.4.8",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "requisite": "^1.9.16",
+    "selenium-standalone": "^4.5.3",
+    "serve-static": "^1.10.0",
+    "shortcake": "^0.2.1",
+    "uglify-js": "^2.4.23",
+    "webdriverio": "^2.4.5"
+  },
+  "scripts": {
+    "test": "cake test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crowdstart/espy.git"
+  },
+  "keywords": [
+    "crowdstart",
+    "analytics"
+  ],
+  "author": "Verus Media",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crowdstart/espy/issues"
+  },
+  "homepage": "https://github.com/crowdstart/espy#readme"
+}
