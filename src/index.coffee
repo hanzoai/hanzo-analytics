@@ -60,7 +60,7 @@ do ->
 
   refreshSession = ()->
     #cookie needs to be refreshed always
-    sessionId = cookies.get sessionIdCookie
+    sessionId = cookies.get
     cookies.set sessionIdCookie, sessionId,
       domain: '.' + document.domain
       expires: 1800
