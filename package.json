@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Crowdstart Platform's Tracking/Analytics",
   "main": "index.js",
-    "devDependencies": {
+  "devDependencies": {
     "bebop": "^1.3.6",
     "cake": "^0.1.1",
     "chai": "^3.1.0",
@@ -35,5 +35,12 @@
   "bugs": {
     "url": "https://github.com/crowdstart/espy/issues"
   },
-  "homepage": "https://github.com/crowdstart/espy#readme"
+  "homepage": "https://github.com/crowdstart/espy#readme",
+  "dependencies": {
+    "cookies-js": "^1.2.1",
+    "node-uuid": "^1.4.3",
+    "query-string": "^2.3.0",
+    "store": "^1.3.17",
+    "useragent": "^2.1.7"
+  }
 }
