@@ -1,99 +1,134 @@
-store = require 'store'
-cookie = require 'cookie-js'
-useragent = require 'useragent'
-qs = require 'query-string'
+#client only
+Espy = null
 
-uuid = require 'node-uuid'
+if window?
+  store = require 'store'
+  cookie = require 'cookie-js'
+  useragent = require 'useragent'
+  qs = require 'query-string'
 
-userIdCookie = '__cs-uid'
-sessionIdCookie = '__cs-sid'
+  uuid = require 'node-uuid'
 
-class Record
-  pageId: ''
-  lastPageId: ''
-  pageViewId: ''
-  lastPageViewId: ''
-  queue: []
+  userIdCookie = '__cs-uid'
+  sessionIdCookie = '__cs-sid'
 
-class Event
+  class Record
+    pageId: ''
+    lastPageId: ''
+    pageViewId: ''
+    lastPageViewId: ''
+    queue: []
 
-do ->
-  # Local Storage Record Management
-  getRecord = ()->
-    return store.get(getSessionId()) ? new Record
 
-  setRecord = (record)->
-    return store.set getSessionId(), record ? new Record
+  do ->
+    getTimestamp = ()->
+      return (new Date).getMilliseconds()
 
-  getTimestamp = ()->
-    return (new Date).getMilliseconds()
+    # Local Storage Record Management
+    getRecord = ()->
+      return store.get(getSessionId()) ? new Record
 
-  # User/Session Id Management (on cookies)
-  cachedUserId
-  getUserId = ()->
-    if cachedUserId?
-      return cachedUserId
+    setRecord = (record)->
+      return store.set getSessionId(), record ? new Record
 
-    userId = cookie.get userIdCookie
-    if !userId?
-      userId = uuid.v4()
-      cookies.set userIdCookie, userId,
-        domain: '.' + document.domain
+    # User/Session Id Management (on cookies)
+    cachedUserId
+    getUserId = ()->
+      if cachedUserId?
+        return cachedUserId
 
-    cachedUserId = userId
-    return userId
+      userId = cookie.get userIdCookie
+      if !userId?
+        userId = uuid.v4()
+        cookies.set userIdCookie, userId,
+          domain: '.' + document.domain
 
-  cachedSessionId
-  getSessionId = ()->
-    if cachedSessionId?
-      return cachedSessionId
+      cachedUserId = userId
+      return userId
 
-    sessionId = cookie.get sessionIdCookie
-    if !sessionId?
-      sessionId = getUserId() + '_' + getTimestamp()
+    cachedSessionId
+    getSessionId = ()->
+      if cachedSessionId?
+        return cachedSessionId
+
+      sessionId = cookie.get sessionIdCookie
+      if !sessionId?
+        sessionId = getUserId() + '_' + getTimestamp()
+        cookies.set sessionIdCookie, sessionId,
+          domain: '.' + document.domain
+          expires: 1800
+
+      cachedSessionId = sessionId
+      return sessionId
+
+    refreshSession = ()->
+      #cookie needs to be refreshed always
+      sessionId = cookies.get
       cookies.set sessionIdCookie, sessionId,
         domain: '.' + document.domain
         expires: 1800
 
-    cachedSessionId = sessionId
-    return sessionId
+    # Page Transitions (in localstorage)
+    cachedPageId
+    cachedPageViewId
+    getPageId = ()->
+      return cachedPageId
 
-  refreshSession = ()->
-    #cookie needs to be refreshed always
-    sessionId = cookies.get
-    cookies.set sessionIdCookie, sessionId,
-      domain: '.' + document.domain
-      expires: 1800
+    getPageViewId = ()->
+      return cachedPageViewId
 
-  # Page Transitions (in localstorage)
-  cachedPageId
-  cachedPageViewId
-  getPageId = ()->
-    return cachedPageId
+    getQueryParams = ()->
+      return qs.parse window.location.search
 
-  getPageViewId = ()->
-    return cachedPageViewId
+    updatePage = ()->
+      newPageId = window.location.pathname + window.location.hash
+      if newPageId != cachedPageId
+        cachedPageId = newPageId
+        cachedPageViewId = cachedPageId + '_' + getTimestamp()
 
-  getQueryParams = ()->
-    return qs.parse window.location.search
+        #fireEspyHere!
+        record = getRecord()
+        record.lastPageId = record.pageId
+        record.lastPageViewId = record.pageViewId
+        record.pageId = cachedPageId
+        record.pageViewId = cachedPageViewId
 
-  updatePage = ()->
-    newPageId = window.location.pathname + window.location.hash
-    if newPageId != cachedPageId
-      cachedPageId = newPageId
-      cachedPageViewId = cachedPageId + '_' + getTimestamp()
+        Espy 'PageView',
+          lastPageId:       record.lastPageId
+          lastPageViewId:   record.lastPageViewId
+          url:              window.location.href
+          referrerUrl:      document.referrer
+          queryParams:      getQueryParams()
 
-      #fireEventHere!
+    Espy = (name, data)->
+      ua = window.navigator.userAgent
 
       record = getRecord()
-      record.lastPageId = record.pageId
-      record.lastPageViewId = record.pageViewId
-      record.pageId = cachedPageId
-      record.pageViewId = cachedPageViewId
+      record.queue.push
+        userId:           getUserId()
+        sessionId:        getSessionId()
+
+        pageId:           record.pageId
+        pageViewId:       record.pageViewId
+
+        uaString:         ua
+        ua:               userAgent.parse ua
+        timestamp:        getTimestamp()
+
+        event:            name
+        data:             data
 
       refreshSession()
 
-  window.addEventListener 'hashchange', updatePage
-  window.addEventListener 'popstate', updatePage
-  updatePage()
+    # Flush Queue
 
+    # Bind Page Transitions
+    window.addEspyListener 'hashchange', updatePage
+    window.addEspyListener 'popstate', updatePage
+
+    window.beforeUnload 'beforeunload', ()->
+      Espy 'PageLeave'
+
+    updatePage()
+
+  module.exports = Espy
