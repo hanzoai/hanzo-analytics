@@ -4,7 +4,7 @@ Espy = null
 if window?
   store = require 'store'
   cookie = require 'cookie-js'
-  useragent = require 'useragent'
+  useragent = require 'ua-parser-js'
   qs = require 'query-string'
 
   uuid = require 'node-uuid'
@@ -46,6 +46,7 @@ if window?
       cachedUserId = userId
       return userId
 
+    # cache the session id so we can resume if user leaves and returns to browser
     cachedSessionId
     getSessionId = ()->
       if cachedSessionId?
@@ -112,7 +113,7 @@ if window?
         pageViewId:       record.pageViewId
 
         uaString:         ua
-        ua:               userAgent.parse ua
+        ua:               userAgent ua
         timestamp:        getTimestamp()
 
         event:            name
@@ -131,4 +132,4 @@ if window?
 
     updatePage()
 
-  module.exports = Espy
+module.exports = Espy
