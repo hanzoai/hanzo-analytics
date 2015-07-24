@@ -6,8 +6,8 @@ if window?
     window.console.log = ()->
 
   store = require 'store'
-  cookie = require 'cookies-js'
-  useragent = require 'ua-parser-js'
+  cookies = require 'cookies-js'
+  userAgent = require 'ua-parser-js'
   qs = require 'query-string'
 
   uuid = require 'node-uuid'
@@ -15,7 +15,7 @@ if window?
   userIdCookie = '__cs-uid'
   sessionIdCookie = '__cs-sid'
 
-  class Record
+  newRecord =
     pageId: ''
     lastPageId: ''
     pageViewId: ''
@@ -27,44 +27,55 @@ if window?
     getTimestamp = ()->
       return (new Date).getMilliseconds()
 
+    cachedDomain = ''
+    getDomain = ()->
+      if !cachedDomain
+        cachedDomain = if document.domain != 'localhost' then '.' + document.domain else ''
+      return cachedDomain
+
     # Local Storage Record Management
-    useRecord = (fn)->
-      record = store.get(getSessionId()) ? new Record
-      fn record
+    getRecord = ()->
+      store.get(getSessionId()) ? newRecord
+
+    saveRecord = (record)->
       store.set getSessionId(), record
 
     # User/Session Id Management (on cookies)
-    cachedUserId
+    cachedUserId = ''
     getUserId = ()->
-      if cachedUserId?
+      if cachedUserId
         return cachedUserId
 
-      userId = cookie.get userIdCookie
-      if !userId?
+      userId = cookies.get userIdCookie
+      if !userId
         userId = uuid.v4()
         cookies.set userIdCookie, userId,
-          domain: '.' + document.domain
+          domain: getDomain()
 
       cachedUserId = userId
       return userId
 
     # cache the session id so we can resume if user leaves and returns to browser
-    cachedSessionId
+    cachedSessionId = ''
     getSessionId = ()->
-      if cachedSessionId?
+      if cachedSessionId
         return cachedSessionId
 
-      sessionId = cookie.get sessionIdCookie
-      if !sessionId?
+      sessionId = cookies.get sessionIdCookie
+      if !sessionId
         sessionId = getUserId() + '_' + getTimestamp()
         cookies.set sessionIdCookie, sessionId,
-          domain: '.' + document.domain
+          domain: getDomain()
           expires: 1800
 
-      useRecord (record)->
+        cachedSessionId = sessionId
+
+        record = getRecord()
         record.count = 0
+        saveRecord(record)
 
       cachedSessionId = sessionId
+
       return sessionId
 
     refreshSession = ()->
@@ -75,8 +86,8 @@ if window?
         expires: 1800
 
     # Page Transitions (in localstorage)
-    cachedPageId
-    cachedPageViewId
+    cachedPageId = ''
+    cachedPageViewId = ''
     getPageId = ()->
       return cachedPageId
 
@@ -84,19 +95,22 @@ if window?
       return cachedPageViewId
 
     getQueryParams = ()->
-      return qs.parse window.location.search
+      return qs.parse(window.location.search || window.location.hash.split('?')[1])
 
     updatePage = ()->
+      record = getRecord()
+
       newPageId = window.location.pathname + window.location.hash
-      if newPageId != cachedPageId
+      if newPageId != record.pageId
         cachedPageId = newPageId
         cachedPageViewId = cachedPageId + '_' + getTimestamp()
 
-        useRecord (record)->
-          record.lastPageId = record.pageId
-          record.lastPageViewId = record.pageViewId
-          record.pageId = cachedPageId
-          record.pageViewId = cachedPageViewId
+        record = getRecord()
+        record.lastPageId = record.pageId
+        record.lastPageViewId = record.pageViewId
+        record.pageId = cachedPageId
+        record.pageViewId = cachedPageViewId
+        saveRecord record
 
         Espy 'PageView',
           lastPageId:       record.lastPageId
@@ -108,59 +122,77 @@ if window?
     Espy = (name, data)->
       ua = window.navigator.userAgent
 
-      useRecord (record)->
-        record.queue.push
-          userId:           getUserId()
-          sessionId:        getSessionId()
+      record = getRecord()
+      record.queue.push
+        userId:           getUserId()
+        sessionId:        getSessionId()
 
-          pageId:           record.pageId
-          pageViewId:       record.pageViewId
+        pageId:           record.pageId
+        pageViewId:       record.pageViewId
 
-          uaString:         ua
-          ua:               userAgent ua
-          timestamp:        new Date()
+        uaString:         ua
+        ua:               userAgent ua
+        timestamp:        new Date()
 
-          event:            name
-          data:             data
-          count:            record.count
+        event:            name
+        data:             data
+        count:            record.count
 
-        record.count++
+      record.count++
+      saveRecord record
 
       refreshSession()
 
     # Flush Queue
     flush = ()->
-      useRecord (record)->
+      record = getRecord()
+      if record.queue.length > 0
+        Espy.onflush record
         retry = 0
-        data = record.queue.slice(0)
+        data = JSON.stringify record.queue
 
         xhr = new XMLHttpRequest
         xhr.onreadystatechange = ()->
           if xhr.readyState == 4
-            if xhr.status != 200
+            if xhr.status != 204
               retry++
               if retry == 3
-                console.log('Espy: failed to send', data)
+                console.log 'Espy: failed to send', JSON.parse data
               else
-                console.log('Espy: retrying send x' + retry)
+                xhr.open 'POST', Espy.url
+                xhr.send data
+                console.log 'Espy: retrying send x' + retry
         xhr.open 'POST', Espy.url
-        xhr.send(data)
+        xhr.setRequestHeader 'Content-Type', 'application/json'
+        xhr.send data
 
         record.queue.length = 0
+        saveRecord record
 
     # Bind Page Transitions
-    window.addEspyListener 'hashchange', updatePage
-    window.addEspyListener 'popstate', updatePage
+    window.addEventListener 'hashchange', updatePage
+    window.addEventListener 'popstate', updatePage
 
-    window.beforeUnload 'beforeunload', ()->
-      Espy 'PageLeave'
+    window.addEventListener 'beforeunload', ()->
+      Espy 'PageChange'
 
-    flush()
     updatePage()
 
-    setInterval ()->
-      flush()
-    , 2000
+    next = ()->
+      setTimeout ()->
+        flush()
+        next()
+      Espy.flushRate || 200
+
+    # prevent blocking page load
+    setTimeout ()->
+      next()
+    , 1
+
+    window.Espy = Espy
 
 Espy.url = 'https://analytics.crowdstart.com/'
+Espy.onflush = ()->
+Espy.flushRate = 200
+
 module.exports = Espy

@@ -3,55 +3,53 @@ should = require('chai').should()
 
 {getBrowser} = require './util'
 
-describe "Cuckoo (#{process.env.BROWSER})", ->
+describe "Espy (#{process.env.BROWSER})", ->
   @timeout 90000
   browser  = getBrowser()
   testPage = "http://localhost:#{process.env.PORT ? 3333}/test.html"
 
-  describe 'Cuckoo can capture uncaptured events', ->
-    it 'should capture a click on an element without a handler', (done) ->
+  describe 'Espy should queue events', ->
+    it 'should capture page view', (done) ->
       browser
         .url testPage
-        .waitForExist '#somelink', 5000
-        .click '#somelink'
-        .getText '#result', (err, res) ->
-          res.should.equal 'clicked: somelink'
+        .waitForExist '#flush'
+        .getText '#flush', (err, res) ->
+          record = JSON.parse(res)
+
+          queue = record.queue
+          queue.length.should.equal 1
+          event = queue[0]
+          event.userId.should.exist
+          event.sessionId.should.exist
+          event.pageId.should.equal '/test.html'
+          event.pageViewId.substring(0, 11).should.equal '/test.html_'
+          event.uaString.should.exist
+          event.ua.should.exist
+          event.timestamp.should.exist
+          event.event.should.equal 'PageView'
+          event.data.should.exist
+          event.data.queryParams.should.exist
+          event.data.lastPageId.should.equal ''
+          event.data.lastPageViewId.should.equal ''
+          event.data.referrerUrl.should.equal ''
+          event.data.url.should.equal 'http://localhost:3333/test.html'
+
         .call done
 
-    it 'should capture window events like hashchange', (done) ->
+    it 'should capture query params', (done) ->
       browser
-        .url testPage
-        .waitForExist '#linktobookmark', 5000
-        .click '#linktobookmark'
-        .getText '#result', (err, res) ->
-          res.should.equal 'hashchangeed: undefined'
+        .url testPage + '#test?q=1'
+        .waitForExist '#flush'
+        .getText '#flush', (err, res) ->
+          record = JSON.parse(res)
+
+          queue = record.queue
+          queue.length.should.equal 1
+          event = queue[0]
+          event.event.should.equal 'PageView'
+          event.data.url.should.equal 'http://localhost:3333/test.html#test?q=1'
+          event.data.queryParams.q.should.equal '1'
+
         .call done
 
-    it 'should filter events', (done) ->
-      browser
-        .url testPage
-        .setValue '#changeinput', 'somethingelse'
-        .getValue '#changeinput', (err, res) ->
-          res.should.equal('somethingelse')
-        .getText '#rejected', (err, res) ->
-          res.should.equal 'changeed: changeinput'
-        .call done
-
-  describe 'Cuckoo can capture captured events', ->
-    it 'should capture propagated events', (done) ->
-      browser
-        .url testPage
-        .waitForExist '#clickablediv', 5000
-        .click '#clickablediv'
-        .getText '#result', (err, res) ->
-          res.should.equal 'clicked: clickablediv'
-        .call done
-
-    it 'should capture unpropagated events', (done) ->
-      browser
-        .url testPage
-        .waitForExist '#dontstopmenow', 5000
-        .click '#dontstopmenow'
-        .getText '#result', (err, res) ->
-          res.should.equal 'clicked: dontstopmenow'
-        .call done
+    #it 'should capture page leave', (done) ->

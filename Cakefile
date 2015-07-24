@@ -2,7 +2,7 @@ Iexec = require('shortcake').exec
 
 option '-b', '--browser [browserName]', 'browser to test with'
 
-task 'build', 'Build module and bundled crowdcontrol.js', ->
+task 'build', 'Build module and bundled espy.js', ->
   exec 'node_modules/.bin/requisite src/index.coffee -o espy.js'
 
 task 'build-min', 'Build minified espy.min.js', ->
