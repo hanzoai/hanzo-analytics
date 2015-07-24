@@ -6,7 +6,7 @@ if window?
     window.console.log = ()->
 
   store = require 'store'
-  cookie = require 'cookie-js'
+  cookie = require 'cookies-js'
   useragent = require 'ua-parser-js'
   qs = require 'query-string'
 
