@@ -182,7 +182,7 @@ if window?
       setTimeout ()->
         flush()
         next()
-      Espy.flushRate || 200
+      , Espy.flushRate || 200
 
     # prevent blocking page load
     setTimeout ()->

@@ -4,7 +4,7 @@ should = require('chai').should()
 {getBrowser} = require './util'
 
 describe "Espy (#{process.env.BROWSER})", ->
-  @timeout 90000
+  @timeout 120000
   browser  = getBrowser()
   testPage = "http://localhost:#{process.env.PORT ? 3333}/test.html"
 
@@ -50,6 +50,20 @@ describe "Espy (#{process.env.BROWSER})", ->
           event.data.url.should.equal 'http://localhost:3333/test.html#test?q=1'
           event.data.queryParams.q.should.equal '1'
 
+        .call done
+
+    it 'should capture generic events', (done)->
+      browser
+        .url testPage
+        .waitForExist '#flush'
+        .click '#1'
+        .getText '#flush', (err, res) ->
+          record = JSON.parse(res)
+
+          queue = record.queue
+          queue.length.should.equal 1
+          event = queue[0]
+          event.event.should.equal 'click_1'
         .call done
 
     #it 'should capture page leave', (done) ->

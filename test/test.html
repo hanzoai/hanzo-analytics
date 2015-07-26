@@ -12,13 +12,24 @@
     <script src="espy.js"></script>
   </head>
   <body>
-    <div id="flush"></div>
+    <button id="1">1</button>
+    <button id="2">2</button>
+    <button id="3">3</button>
     <script>
-      Espy.url = "http://localhost:8080/analytics/?token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJiaXQiOjIwLCJqdGkiOiJiZ1hRYkpyWGtDQSIsInN1YiI6IkdQVHE2ZTM2c1IifQ.7SllMXMCydU5kTivZlMDBHfkUQm5l742l7Y0x7Pci03x7iHKL_ggrEeiGDkfYUoThv7p1vXjqVE1ps3JY0exjw"
-      Espy.flushRate = 10000
+      Espy.url = 'http://localhost:8080/analytics/?token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJiaXQiOjIwLCJqdGkiOiJscTBELW1iVTdMdyIsInN1YiI6IkdQVHE2ZTM2c1IifQ.4nefUphoTfhc9095G1lYkorSV25rQVhTm_etLkHmoPOmqK3t6mb0-hFayw_1bKSTKwfSmhgFq_0w0g848U9kYg'
+      Espy.flushRate = 1
       Espy.onflush = function(record) {
-        document.getElementById('flush').innerHTML = JSON.stringify(record)
+        var flush = document.getElementById('flush')
+        if (!flush) {
+          flush = document.createElement('div')
+          flush.id = 'flush'
+          document.body.appendChild(flush)
+        }
+        flush.innerHTML = JSON.stringify(record)
       }
+      $('button').on('click', function(event){
+        Espy('click' + '_' + $(this).attr('id'))
+      })
     </script>
   </body>
 </html>
