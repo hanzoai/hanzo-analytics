@@ -1,6 +1,6 @@
 {
   "name": "espy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Crowdstart Platform's Tracking/Analytics",
   "main": "index.js",
   "devDependencies": {
