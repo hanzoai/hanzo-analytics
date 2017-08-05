@@ -1,11 +1,10 @@
 {
-  "name": "espy",
+  "name": "hanzo-analytics",
   "version": "1.0.1",
-  "description": "Crowdstart Platform's Tracking/Analytics",
+  "description": "Hanzo Platform's Tracking/Analytics",
   "main": "src/index.coffee",
   "devDependencies": {
     "bebop": "^1.3.6",
-    "cake": "^0.1.1",
     "chai": "^3.1.0",
     "coffee-script": "^1.9.3",
     "connect": "^3.4.0",
