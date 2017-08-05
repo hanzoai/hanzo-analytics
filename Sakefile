@@ -5,11 +5,11 @@ use 'sake-outdated'
 
 option '-b', '--browser [browserName]', 'browser to test with'
 
-task 'build', 'Build module and bundled espy.js', ->
-  exec 'node_modules/.bin/requisite src/index.coffee -o espy.js'
+task 'build', 'Build module and bundled hanzo-analytics.js', ->
+  exec 'node_modules/.bin/requisite src/index.coffee -o hanzo-analytics.js'
 
-task 'build-min', 'Build minified espy.min.js', ->
-  exec 'node_modules/.bin/requisite src/index.coffee -m -o espy.min.js'
+task 'build-min', 'Build minified hanzo-analytics.min.js', ->
+  exec 'node_modules/.bin/requisite src/index.coffee -m -o hanzo-analytics.min.js'
 
 task 'watch', 'watch for changes and recompile', ->
   exec 'node_modules/.bin/bebop'
