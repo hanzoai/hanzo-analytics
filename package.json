@@ -4,7 +4,7 @@
   "description": "Hanzo Platform's Tracking/Analytics",
   "main": "src/index.coffee",
   "devDependencies": {
-    "bebop": "^1.3.6",
+    "bebop": "^1.12.5",
     "sake-bundle": "^0.6.0",
     "sake-cli": "0.5.21",
     "sake-core": "1.5.1",
@@ -13,18 +13,18 @@
     "sake-publish": "0.1.16",
     "sake-test": "0.1.5",
     "sake-version": "0.1.19",
-    "chai": "^3.1.0",
-    "coffee-script": "^1.9.3",
-    "connect": "^3.4.0",
-    "executive": "^0.4.8",
-    "mocha": "^2.2.5",
-    "phantomjs": "^1.9.17",
-    "requisite": "^1.9.16",
-    "selenium-standalone": "^4.5.3",
-    "serve-static": "^1.10.0",
-    "shortcake": "^0.2.1",
-    "uglify-js": "^2.4.23",
-    "webdriverio": "^2.4.5"
+    "chai": "^4.1.1",
+    "coffee-script": "^1.12.7",
+    "connect": "^3.6.3",
+    "executive": "^1.5.11",
+    "mocha": "^3.5.0",
+    "phantomjs": "^2.1.7",
+    "requisite": "^1.19.17",
+    "selenium-standalone": "^6.6.0",
+    "serve-static": "^1.12.3",
+    "shortcake": "^1.2.8",
+    "uglify-js": "^3.0.27",
+    "webdriverio": "^4.8.0"
   },
   "scripts": {
     "test": "cake test"
@@ -44,11 +44,11 @@
   },
   "homepage": "https://github.com/crowdstart/espy#readme",
   "dependencies": {
-    "cookies-js": "^1.2.1",
-    "cuckoo-js": "^1.0.1",
-    "node-uuid": "^1.4.3",
-    "query-string": "^2.3.0",
-    "store": "^1.3.17",
-    "ua-parser-js": "^0.7.9"
+    "cookies-js": "^1.2.3",
+    "cuckoo-js": "^1.0.4",
+    "node-uuid": "^1.4.8",
+    "query-string": "^5.0.0",
+    "store": "^2.0.12",
+    "ua-parser-js": "^0.7.14"
   }
 }
