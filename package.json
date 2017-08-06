@@ -56,6 +56,7 @@
     "webdriverio": "^4.8.0"
   },
   "dependencies": {
+    "akasha": "0.1.9",
     "cookies-js": "^1.2.3",
     "cuckoo-js": "1.0.6",
     "node-uuid": "^1.4.8",
