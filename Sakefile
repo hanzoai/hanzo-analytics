@@ -16,16 +16,7 @@ task 'build', 'build project', ->
         version: 1
 
 task 'build:min', 'build project for production', ['build'], ->
-  yield bundle.write
-    entry: 'src/index.coffee'
-    external: false
-    sourceMap: false
-    browser: false
-    compilers:
-      coffee:
-        version: 1
-
-  yield exec 'uglifyjs hanzo-analytics.js -o hanzo-analytics.min.js'
+  exec 'uglifyjs lib/hanzo-analytics.js -o lib/hanzo-analytics.min.js'
 
 task 'coverage', 'Process coverage statistics', ->
   exec '''
