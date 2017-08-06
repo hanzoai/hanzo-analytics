@@ -150,6 +150,7 @@ if window?
           queryParams:      getQueryParams()
 
     HanzoAnalytics = (name, data)->
+      record = getRecord()
       ua = window.navigator.userAgent
 
       r =
@@ -175,7 +176,6 @@ if window?
       if userId
         r.userId = userId
 
-      record = getRecord()
       record.queue.push r
 
       record.count++
