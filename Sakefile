@@ -11,7 +11,6 @@ task 'clean', 'clean project', ->
 task 'build', 'build project', ->
   bundle.write
     entry: 'src/index.coffee'
-    format: 'es'
     compilers:
       coffee:
         version: 1
@@ -19,7 +18,6 @@ task 'build', 'build project', ->
 task 'build:min', 'build project for production', ['build'], ->
   yield bundle.write
     entry: 'src/index.coffee'
-    format: 'es'
     external: false
     sourceMap: false
     browser: false

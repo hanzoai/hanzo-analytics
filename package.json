@@ -4,7 +4,7 @@
   "description": "Hanzo Platform's Tracking/Analytics",
   "main": "lib/hanzo-analytics.js",
   "module": "lib/hanzo-analytics.mjs",
-  "jsnext:main": "lib/daisho.mjs",
+  "jsnext:main": "lib/hanzo-analytics.mjs",
   "files": [
     "lib/",
     "src/"
