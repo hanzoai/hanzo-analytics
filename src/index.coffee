@@ -184,6 +184,8 @@ if window?
         retry = 0
         data = JSON.stringify record.queue
 
+        url = HanzoAnalytics.url + HanzoAnalytics.orgId
+
         xhr = new XMLHttpRequest
         xhr.onreadystatechange = ()->
           if xhr.readyState == 4
@@ -192,10 +194,10 @@ if window?
               if retry == 3
                 console.log 'HanzoAnalytics: failed to send', JSON.parse data
               else
-                xhr.open 'POST', HanzoAnalytics.url
+                xhr.open 'POST', url
                 xhr.send data
                 console.log 'HanzoAnalytics: retrying send x' + retry
-        xhr.open 'POST', HanzoAnalytics.url
+        xhr.open 'POST', url
         xhr.setRequestHeader 'Content-Type', 'application/json'
         xhr.send data
 
@@ -228,5 +230,6 @@ if window?
 HanzoAnalytics.url = 'https://analytics.hanzo.io/'
 HanzoAnalytics.onFlush = ()->
 HanzoAnalytics.flushRate = 1000
+HanzoAnalytics.orgId = ''
 
 export default HanzoAnalytics
