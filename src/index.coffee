@@ -35,7 +35,7 @@ if window?
     queue: []
 
   do ->
-    getUserIdFromJWT (jwt)->
+    getUserIdFromJWT = (jwt)->
       if !jwt || typeof jwt != 'string'
         return null
 
