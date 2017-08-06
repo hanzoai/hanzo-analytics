@@ -28,19 +28,19 @@ task 'coverage', 'Process coverage statistics', ->
 task 'watch', 'watch for changes and recompile project', ['build'], ->
   watch 'src/*', -> invoke 'build'
 
-task 'static-server', 'Run static server for tests', ->
+task 'server', 'Run static server for tests', ->
   connect = require 'connect'
   server = connect()
   server.use (require 'serve-static') './test'
   server.listen process.env.PORT ? 3333
 
-task 'selenium-install', 'Install selenium standalone', ->
+task 'selenium:install', 'Install selenium standalone', ->
   exec 'node_modules/.bin/selenium-standalone install'
 
 task 'test', 'Run tests', (options) ->
   browserName = options.browser ? 'phantomjs'
 
-  invoke 'static-server'
+  invoke 'server'
 
   selenium = require 'selenium-standalone'
   selenium.start (err, child) ->
