@@ -58,10 +58,8 @@
   "dependencies": {
     "akasha": "0.1.9",
     "cookies-js": "^1.2.3",
-    "cuckoo-js": "1.0.6",
-    "node-uuid": "^1.4.8",
-    "query-string": "5.0.0",
-    "store": "2.0.12",
-    "ua-parser-js": "^0.7.14"
+    "es-ua-parser": "0.0.1",
+    "js-uuid": "0.0.6",
+    "query-string": "5.0.0"
   }
 }

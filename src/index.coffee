@@ -1,3 +1,8 @@
+import store from 'akasha'
+import cookies from 'es-cookies'
+import userAgent from 'es-ua-parser'
+import uuidGen from 'js-uuid'
+
 #client only
 HanzoAnalytics = ()->
 
@@ -5,16 +10,18 @@ expirationTime = 1800 # 30 minutes
 uuidExpirationTime = 60 * 60 * 24 * 365 * 2 # 2 years
 userCookie = 'hzo'
 
+# https://stackoverflow.com/questions/2090551/parse-query-string-in-javascript
+qs = (qstr)->
+  query = {}
+  a = qstr.split('&')
+  for i in [0...a.length]
+    b = a[i].split '='
+    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '')
+  return query
+
 if window?
   if !window.console? || !window.console.log?
     window.console.log = ()->
-
-  store = require 'akasha'
-  cookies = require 'cookies-js'
-  userAgent = require 'ua-parser-js'
-  qs = require 'query-string'
-
-  uuidGen = require 'node-uuid'
 
   uuidCookie = '__cs-uid'
   sessionIdCookie = '__cs-sid'
