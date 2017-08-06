@@ -50,7 +50,7 @@
     "sake-test": "0.1.5",
     "sake-version": "0.1.19",
     "selenium-standalone": "^6.6.0",
-    "serve-static": "^1.12.3",
+    "serve-static": "^1.12.4",
     "shortcake": "^1.2.8",
     "uglify-js": "^3.0.27",
     "webdriverio": "^4.8.0"
