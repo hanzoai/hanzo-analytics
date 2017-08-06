@@ -1,5 +1,5 @@
 #client only
-Espy = ()->
+HanzoAnalytics = ()->
 
 if window?
   if !window.console? || !window.console.log?
@@ -112,14 +112,14 @@ if window?
         record.pageViewId = cachedPageViewId
         saveRecord record
 
-        Espy 'PageView',
+        HanzoAnalytics 'PageView',
           lastPageId:       record.lastPageId
           lastPageViewId:   record.lastPageViewId
           url:              window.location.href
           referrerUrl:      document.referrer
           queryParams:      getQueryParams()
 
-    Espy = (name, data)->
+    HanzoAnalytics = (name, data)->
       ua = window.navigator.userAgent
 
       record = getRecord()
@@ -147,7 +147,7 @@ if window?
     flush = ()->
       record = getRecord()
       if record.queue.length > 0
-        Espy.onflush record
+        HanzoAnalytics.onflush record
         retry = 0
         data = JSON.stringify record.queue
 
@@ -157,12 +157,12 @@ if window?
             if xhr.status != 204
               retry++
               if retry == 3
-                console.log 'Espy: failed to send', JSON.parse data
+                console.log 'HanzoAnalytics: failed to send', JSON.parse data
               else
-                xhr.open 'POST', Espy.url
+                xhr.open 'POST', HanzoAnalytics.url
                 xhr.send data
-                console.log 'Espy: retrying send x' + retry
-        xhr.open 'POST', Espy.url
+                console.log 'HanzoAnalytics: retrying send x' + retry
+        xhr.open 'POST', HanzoAnalytics.url
         xhr.setRequestHeader 'Content-Type', 'application/json'
         xhr.send data
 
@@ -174,7 +174,7 @@ if window?
     window.addEventListener 'popstate', updatePage
 
     window.addEventListener 'beforeunload', ()->
-      Espy 'PageChange'
+      HanzoAnalytics 'PageChange'
 
     updatePage()
 
@@ -182,17 +182,17 @@ if window?
       setTimeout ()->
         flush()
         next()
-      , Espy.flushRate || 200
+      , HanzoAnalytics.flushRate || 200
 
     # prevent blocking page load
     setTimeout ()->
       next()
     , 1
 
-    window.Espy = Espy
+    window.HanzoAnalytics = HanzoAnalytics
 
-Espy.url = 'https://analytics.crowdstart.com/'
-Espy.onflush = ()->
-Espy.flushRate = 200
+HanzoAnalytics.url = 'https://analytics.crowdstart.com/'
+HanzoAnalytics.onflush = ()->
+HanzoAnalytics.flushRate = 200
 
-module.exports = Espy
+export default HanzoAnalytics

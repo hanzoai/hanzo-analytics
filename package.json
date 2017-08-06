@@ -29,11 +29,15 @@
     "url": "https://github.com/hanzo-io/hanzo-analytics/issues"
   },
   "homepage": "https://github.com/hanzo-io/hanzo-analytics#readme",
-    "devDependencies": {
+  "devDependencies": {
     "chai": "^4.1.1",
-    "coffee-script": "^1.12.7",
+    "chai-as-promised": "6.0.0",
+    "co-mocha": "1.2.0",
+    "codecov.io": "0.1.6",
+    "coffee-coverage": "2.0.1",
+    "coffee-script": "1.12.6",
     "connect": "^3.6.3",
-    "executive": "^1.5.11",
+    "coveralls": "2.13.1",
     "mocha": "^3.5.0",
     "phantomjs": "^2.1.7",
     "requisite": "^1.19.17",
