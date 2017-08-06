@@ -154,7 +154,7 @@ if window?
 
       r =
         uuid:       getUuid()
-        userId:     getUser()
+        userId:     getUserIdFromJWT()
         ga:         cookies.get '_ga'
         gid:        cookies.get '_gid'
         fr:         cookies.get 'fr'
