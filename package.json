@@ -2,8 +2,34 @@
   "name": "hanzo-analytics",
   "version": "1.0.1",
   "description": "Hanzo Platform's Tracking/Analytics",
-  "main": "src/index.coffee",
-  "devDependencies": {
+  "main": "lib/hanzo-analytics.js",
+  "module": "lib/hanzo-analytics.mjs",
+  "jsnext:main": "lib/daisho.mjs",
+  "files": [
+    "lib/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "sake build",
+    "prepublishOnly": "sake build",
+    "pretext": "sake build",
+    "test": "sake test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzo-io/hanzo-analytics.git"
+  },
+  "keywords": [
+    "hanzo",
+    "analytics"
+  ],
+  "author": "Hanzo, Inc <hi@hanzo.io>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/hanzo-io/hanzo-analytics/issues"
+  },
+  "homepage": "https://github.com/hanzo-io/hanzo-analytics#readme",
+    "devDependencies": {
     "chai": "^4.1.1",
     "coffee-script": "^1.12.7",
     "connect": "^3.6.3",
@@ -25,23 +51,6 @@
     "uglify-js": "^3.0.27",
     "webdriverio": "^4.8.0"
   },
-  "scripts": {
-    "test": "sake test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hanzo-io/hanzo-analytics.git"
-  },
-  "keywords": [
-    "hanzo",
-    "analytics"
-  ],
-  "author": "Hanzo",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hanzo-io/hanzo-analytics/issues"
-  },
-  "homepage": "https://github.com/hanzo-io/hanzo-analytics#readme",
   "dependencies": {
     "cookies-js": "^1.2.3",
     "cuckoo-js": "1.0.5",

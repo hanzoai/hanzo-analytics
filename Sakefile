@@ -8,7 +8,7 @@ use 'sake-version'
 task 'clean', 'clean project', ->
   exec 'rm -rf lib'
 
-task 'build', 'build js' ->
+task 'build', 'build project', ->
   bundle.write
     entry: 'src/index.coffee'
     format: 'es'
@@ -16,7 +16,7 @@ task 'build', 'build js' ->
       coffee:
         version: 1
 
-task 'build:min', 'build js for production', ['build'], ->
+task 'build:min', 'build project for production', ['build'], ->
   yield bundle.write
     entry: 'src/index.coffee'
     format: 'es'
