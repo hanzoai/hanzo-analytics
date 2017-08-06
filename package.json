@@ -45,7 +45,7 @@
   "homepage": "https://github.com/crowdstart/espy#readme",
   "dependencies": {
     "cookies-js": "^1.2.3",
-    "cuckoo-js": "^1.0.5",
+    "cuckoo-js": "1.0.5",
     "node-uuid": "^1.4.8",
     "query-string": "5.0.0",
     "store": "2.0.12",
