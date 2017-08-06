@@ -1,6 +1,6 @@
 {
   "name": "hanzo-analytics",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Hanzo Platform's Tracking/Analytics",
   "main": "lib/hanzo-analytics.js",
   "module": "lib/hanzo-analytics.mjs",
