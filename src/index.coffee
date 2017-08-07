@@ -234,7 +234,7 @@ if window?
     window.HanzoAnalytics = HanzoAnalytics
     window.ha = HanzoAnalytics
 
-HanzoAnalytics.url = 'https://analytics.hanzo.io/'
+HanzoAnalytics.url = 'https://a.hanzo.io/'
 HanzoAnalytics.onFlush = ()->
 HanzoAnalytics.flushRate = 1000
 HanzoAnalytics.orgId = ''
