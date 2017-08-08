@@ -64,7 +64,7 @@ if window?
 
     # Local Storage Record Management
     getRecord = ()->
-      store.get(getSessionId()) ? newRecord
+      store.get(getSessionId()) ? Object.assign({}, newRecord)
 
     saveRecord = (record)->
       store.set getSessionId(), record
@@ -230,6 +230,7 @@ if window?
 
     # prevent blocking page load
     setTimeout ()->
+      updatePage()
       next()
     , 1
 
