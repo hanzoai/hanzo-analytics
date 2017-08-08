@@ -142,16 +142,19 @@ if window?
         record.pageViewId = cachedPageViewId
         saveRecord record
 
+        ua = window.navigator.userAgent
+
         HanzoAnalytics 'PageView',
           lastPageId:       record.lastPageId
           lastPageViewId:   record.lastPageViewId
           url:              window.location.href
           referrerUrl:      document.referrer
           queryParams:      getQueryParams()
+          uaString:         ua
+          ua:               userAgent ua
 
     HanzoAnalytics = (name, data)->
       record = getRecord()
-      ua = window.navigator.userAgent
 
       r =
         uuid:       getUuid()
@@ -164,11 +167,10 @@ if window?
         pageId:     record.pageId
         pageViewId: record.pageViewId
 
-        uaString:   ua
-        ua:         userAgent ua
         timestamp:  new Date()
 
         event:      name
+        referrer:   document.referrer
         data:       data
         count:      record.count
 
