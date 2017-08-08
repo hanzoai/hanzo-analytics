@@ -125,7 +125,7 @@ if window?
       return cachedPageViewId
 
     getQueryParams = ()->
-      return qs(window.location.search || window.location.hash.split('?')[1])
+      return qs(window.location.search ? window.location.hash.split('?')[1] ? '')
 
     updatePage = ()->
       record = getRecord()
