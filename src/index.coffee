@@ -125,7 +125,7 @@ if window?
       return cachedPageViewId
 
     getQueryParams = ()->
-      return qs.parse(window.location.search || window.location.hash.split('?')[1])
+      return qs(window.location.search || window.location.hash.split('?')[1])
 
     updatePage = ()->
       record = getRecord()
@@ -219,8 +219,6 @@ if window?
 
     window.addEventListener 'beforeunload', ()->
       HanzoAnalytics 'PageChange'
-
-    updatePage()
 
     next = ()->
       setTimeout ()->
