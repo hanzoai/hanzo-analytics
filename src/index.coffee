@@ -12,6 +12,9 @@ userCookie = 'hzo'
 
 # https://stackoverflow.com/questions/2090551/parse-query-string-in-javascript
 qs = (qstr)->
+  if !qstr
+    return {}
+
   query = {}
   a = qstr.split('&')
   for i in [0...a.length]
