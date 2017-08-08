@@ -151,9 +151,10 @@ if window?
           lastPageId:       record.lastPageId
           lastPageViewId:   record.lastPageViewId
           url:              window.location.href
-          referrerUrl:      document.referrer
+          protocol:         document.location.protocol
+          domain:           document.domain
+          referrer:         document.referrer
           queryParams:      getQueryParams()
-          uaString:         ua
           ua:               userAgent ua
 
     HanzoAnalytics = (name, data)->
@@ -232,6 +233,8 @@ if window?
     # prevent blocking page load
     setTimeout ()->
       updatePage()
+      flush()
+
       next()
     , 1
 
