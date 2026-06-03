@@ -60,6 +60,6 @@
     "cookies-js": "^1.2.3",
     "es-ua-parser": "0.0.1",
     "js-uuid": "0.0.6",
-    "query-string": "5.0.0"
+    "query-string": "5.1.0"
   }
 }
