@@ -1,0 +1,29 @@
+# Canonical CI/CD config for hanzoai/hanzo-analytics — the one file both the
+# hanzoai/ci reusable (.hanzo/workflows/cicd.yml) and platform.hanzo.ai read.
+#
+# An npm package (the browser tracking client), published from a tag. No image,
+# no deploy.
+#
+# The gate is the real build: sake-bundle compiles src/index.coffee and writes
+# lib/hanzo-analytics.js, which IS the published artifact (package.json main
+# points at it and `files` ships lib/). A CoffeeScript break is invisible until
+# something compiles it, so this is the check that matters here.
+#
+# `--ignore-scripts` on the install is load-bearing, not caution: this tree's
+# devDependencies include phantomjs@2, whose install script downloads a binary
+# from a host that no longer serves it, so a plain `npm install` fails on a
+# dependency the build never uses. Bin shims are still linked, so `sake` runs.
+# The final assertion is that the artifact exists and is non-empty — a bundler
+# that exits 0 having written nothing is the failure this catches.
+#
+# Not claimed: `sake test`. That task starts selenium-standalone and drives
+# PhantomJS against a local static server — a browser matrix this fleet does not
+# have, and PhantomJS has been unmaintained for years. Those tests come back
+# with a real headless browser, not by pretending here.
+test:
+  - name: build
+    run: |
+      set -e
+      npm install --ignore-scripts
+      npx sake build
+      test -s lib/hanzo-analytics.js
