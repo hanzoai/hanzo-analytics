@@ -4,3 +4,8 @@ package-lock.json
 .sake
 .test
 phantomjsdriver.log
+
+# Local symlinks to LLM.md
+CLAUDE.md
+AGENTS.md
+GEMINI.md
